@@ -38,13 +38,13 @@ export class CustomersService {
     });
   }
 
-  async remove(id: number) {
+  public async remove(id: number) {
     await this.ifNotExists(id);
 
     return this.prisma.customer.delete({ where: { id } });
   }
 
-  async ifNotExists(id: number) {
+  private async ifNotExists(id: number) {
     if (!(await this.prisma.customer.count({ where: { id } }))) {
       throw new NotFoundException(`Cliente com o id: ${id} não existe.`);
     }

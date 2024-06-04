@@ -1,34 +1,48 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { SellersService } from './sellers.service';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Sellers')
 @Controller('sellers')
 export class SellersController {
   constructor(private readonly sellersService: SellersService) {}
 
   @Post()
-  create(@Body() createSellerDto: CreateSellerDto) {
-    return this.sellersService.create(createSellerDto);
+  public async create(@Body() createSellerDto: CreateSellerDto) {
+    return await this.sellersService.create(createSellerDto);
   }
 
   @Get()
-  findAll() {
-    return this.sellersService.findAll();
+  public async findAll() {
+    return await this.sellersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sellersService.findOne(+id);
+  public async findOne(@Param('id', ParseIntPipe) id: string) {
+    return await this.sellersService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSellerDto: UpdateSellerDto) {
-    return this.sellersService.update(+id, updateSellerDto);
+  public async update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateSellerDto: UpdateSellerDto,
+  ) {
+    return await this.sellersService.update(+id, updateSellerDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sellersService.remove(+id);
+  public async remove(@Param('id', ParseIntPipe) id: string) {
+    return await this.sellersService.remove(+id);
   }
 }

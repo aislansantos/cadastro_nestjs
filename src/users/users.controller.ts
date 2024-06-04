@@ -20,29 +20,29 @@ export class UsersController {
 
   @Post()
   public async create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return await this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  public async findAll() {
+    return await this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(+id);
+  public async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.usersService.findOne(+id);
   }
 
   @Patch(':id')
-  update(
+  public async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.usersService.update(+id, updateUserDto);
+    return await this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
-    return this.usersService.remove(+id);
+  public async remove(@Param('id', ParseIntPipe) id: string) {
+    return await this.usersService.remove(+id);
   }
 }

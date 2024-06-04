@@ -33,6 +33,17 @@ model User {
   @@map("users")
 }
 
+model Seller {
+  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  status    STATUS   @default(ativo)
+  name      String   @db.VarChar(63)
+  email     String   @db.VarChar(127)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @db.Timestamp(0)
+
+  @@map("sellers")
+}
+
 enum STATUS {
   ativo
   inativo
