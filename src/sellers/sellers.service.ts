@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class SellersService {
-  create(createSellerDto: CreateSellerDto) {
-    return 'This action adds a new seller';
+  private updateData = new Date();
+  constructor(private readonly prisma: PrismaService) {}
+  public async create(createSellerDto: CreateSellerDto) {
+    return await this.prisma.seller.create({ data: createSellerDto });
   }
 
-  findAll() {
-    return `This action returns all sellers`;
+  public async findAll() {
+    return await this.prisma.seller.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} seller`;
+  public async findOne(id: number) {
+    await this.ifNotExtist(id);
+    return await this.prisma.seller.findUnique({ where: { id } });
   }
 
-  update(id: number, updateSellerDto: UpdateSellerDto) {
-    return `This action updates a #${id} seller`;
+  public async update(id: number, updateSellerDto: UpdateSellerDto) {
+    await this.ifNotExtist(id);
+
+    const data: any = {};
+
+    for (const keys of Object.keys(updateSellerDto)) {
+      if (updateSellerDto[keys]) data[keys] = updateSellerDto[keys];
+    }
+
+    data.updatedAt = this.updateData;
+
+    return await this.prisma.seller.update({
+      where: { id },
+      data,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} seller`;
+  public async remove(id: number) {
+    await this.ifNotExtist(id);
+    return await this.prisma.seller.delete({ where: { id } });
+  }
+
+  private async ifNotExtist(id: number) {
+    if (!(await this.prisma.seller.count({ where: { id } }))) {
+      throw new NotFoundException(`Vendedor com o id ${id} não encontrado.`);
+    }
   }
 }
