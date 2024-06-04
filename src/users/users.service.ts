@@ -5,12 +5,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  updatedData = new Date();
+  private updatedData = new Date();
   constructor(private readonly prisma: PrismaService) {}
 
   public async create(createUserDto: CreateUserDto) {
-    console.log(createUserDto);
-
     return this.prisma.user.create({ data: createUserDto });
   }
 
@@ -19,6 +17,7 @@ export class UsersService {
   }
 
   public async findOne(id: number) {
+    await this.IfNotExist(id);
     return await this.prisma.user.findUnique({ where: { id } });
   }
 
@@ -52,8 +51,8 @@ export class UsersService {
   }
 
   async IfNotExist(id: number) {
-    if (!(await this.findOne(id))) {
-      throw new NotFoundException(`Usuário com o ${id} não existe.`);
+    if (!(await this.prisma.user.count({ where: { id } }))) {
+      throw new NotFoundException(`Usuário com o id: ${id} não existe.`);
     }
   }
 }

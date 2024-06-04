@@ -8,18 +8,21 @@ datasource db {
 }
 
 model Customer {
-  id       Int    @id @default(autoincrement())
-  name     String @db.VarChar(60)
-  lastname String @db.VarChar(60)
-  email    String @db.VarChar(130)
-  City     String @db.VarChar(130)
+  id        Int      @id @default(autoincrement())
+  status    STATUS   @default(ativo)
+  name      String   @db.VarChar(60)
+  lastname  String   @db.VarChar(60)
+  email     String   @db.VarChar(130)
+  city      String   @db.VarChar(130)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @db.Timestamp(0)
 
   @@map("customers")
 }
 
 model User {
   id        Int       @id @default(autoincrement()) @db.UnsignedInt
-  active    Boolean   @default(true)
+  status    STATUS    @default(ativo)
   name      String    @db.VarChar(63)
   email     String    @db.VarChar(127)
   password  String    @db.VarChar(127)
@@ -28,4 +31,9 @@ model User {
   updatedAt DateTime  @default(now()) @db.Timestamp(0)
 
   @@map("users")
+}
+
+enum STATUS {
+  ativo
+  inativo
 }

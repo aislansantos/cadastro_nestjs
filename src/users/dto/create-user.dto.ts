@@ -1,7 +1,8 @@
+import { STATUS } from '@prisma/client';
 import {
-  IsBoolean,
   IsDateString,
   IsEmail,
+  IsEnum,
   IsOptional,
   IsString,
   IsStrongPassword,
@@ -12,8 +13,8 @@ export class CreateUserDto {
   name: string;
 
   @IsOptional()
-  @IsBoolean()
-  active: boolean;
+  @IsEnum(STATUS)
+  status: STATUS;
 
   @IsEmail()
   email: string;
