@@ -231,3 +231,5 @@ Mostra o Swagger monstrando todos os endpoint bem como testalos.
 | Parâmetro | Tipo     | Descrição                                               |
 | :-------- | :------- | :------------------------------------------------------ |
 | `id`      | `string` | **Obrigatório**. O ID do vendedor que você quer deletar |
+
+...
