@@ -1,17 +1,17 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   ParseIntPipe,
+  Patch,
+  Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { ApiTags } from '@nestjs/swagger';
 
 //! decorator do Swagger para criar as separações
 @ApiTags('Customers')
@@ -36,14 +36,14 @@ export class CustomersController {
 
   @Patch(':id')
   public async update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: string,
     @Body() updateCustomerDto: UpdateCustomerDto,
   ) {
     return await this.customersService.update(+id, updateCustomerDto);
   }
 
   @Delete(':id')
-  public async remove(@Param('id') id: string) {
+  public async remove(@Param('id', ParseIntPipe) id: string) {
     return await this.customersService.remove(+id);
   }
 }
