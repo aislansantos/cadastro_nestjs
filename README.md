@@ -2,11 +2,11 @@
 
 Projeto de controle de estoque, que visa melhorar projeto ja executado em NodeJs e ExpressJs, por um projeto feito em NestJs, melhorando a estrutua do projeto, criando uma estrutura mais organizada.
 
-### Problema apresentado
+## Problema apresentado
 
 O principal problema proposto pelo app, é fazer um controle simples de compra e venda de produtos, otimizando o gasto com produto par não haver um estoque inflado, bem como não haver falta de produto para venda.
 
-### Tecnologias ultilizadas
+## Tecnologias ultilizadas
 
 - TypeScript
 - NodeJs
@@ -128,13 +128,19 @@ Mostra o Swagger monstrando todos os endpoint bem como testalos.
  POST /api/customers
 ```
 
-| Parâmetro  | Tipo     | Descrição                                               |
-| :--------- | :------- | :------------------------------------------------------ |
-| `status`   | `string` | 'ativo'/'inativo' > inicia como ativo se não informado. |
-| `name`     | `string` | **Obrigatório** - Nome                                  |
-| `lastname` | `string` | **Obrigatório** - Sobrenome                             |
-| `email`    | `string` | **Obrigatório** - E-mail                                |
-| `city`     | `string` | **Obrigatório** - Cidade de residência                  |
+| Campo           | Tipo     | Descrição                                               |
+| :-------------- | :------- | :------------------------------------------------------ |
+| `status`        | `string` | 'ativo'/'inativo' > inicia como ativo se não informado. |
+| `nome`          | `string` | **Obrigatório**                                         |
+| `nome fantasia` | `string` | Nome fantasia                                           |
+| `rua`           | `string` | **Obrigatório** - Rua/Avenida/Alameda/Praça             |
+| `numero`        | `string` | **Obrigatório**                                         |
+| `complemento`   | `string` | Alguma informação relevante para localizar endereço     |
+| `bairro`        | `string` | **Obrigatório**                                         |
+| `cidade`        | `string` | **Obrigatório**                                         |
+| `estado`        | `string` | **Obrigatório**                                         |
+| `telefone`      | `string` | **Obrigatório**                                         |
+| `email`         | `string` | **Obrigatório**                                         |
 
 ---
 
@@ -148,13 +154,19 @@ Mostra o Swagger monstrando todos os endpoint bem como testalos.
 | :-------- | :------- | :---------------------------------------------------- |
 | `id`      | `string` | **Obrigatório**. O ID do cliente que você quer editar |
 
-| Dados      | Tipo     | Descrição            |
-| :--------- | :------- | :------------------- |
-| `status`   | `string` | 'ativo'/'inativo'    |
-| `name`     | `string` | Nome                 |
-| `lastname` | `string` | Sobrenome            |
-| `email`    | `string` | E-mai                |
-| `city`     | `string` | Cidade de residência |
+| Campo           | Tipo     |
+| :-------------- | :------- |
+| `status`        | `string` |
+| `nome`          | `string` |
+| `nome fantasia` | `string` |
+| `rua`           | `string` |
+| `numero`        | `string` |
+| `complemento`   | `string` |
+| `bairro`        | `string` |
+| `cidade`        | `string` |
+| `estado`        | `string` |
+| `telefone`      | `string` |
+| `email`         | `string` |
 
 ---
 

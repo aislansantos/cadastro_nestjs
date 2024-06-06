@@ -8,14 +8,20 @@ datasource db {
 }
 
 model Customer {
-  id        Int      @id @default(autoincrement())
-  status    STATUS   @default(ativo)
-  name      String   @db.VarChar(60)
-  lastname  String   @db.VarChar(60)
-  email     String   @db.VarChar(130)
-  city      String   @db.VarChar(130)
-  createdAt DateTime @default(now()) @db.Timestamp(0)
-  updatedAt DateTime @default(now()) @db.Timestamp(0)
+  id           Int      @id @default(autoincrement())
+  status       STATUS   @default(ativo)
+  nome         String   @db.VarChar(120)
+  nomefantasia String?  @db.VarChar(120)
+  rua          String  @db.VarChar(130)
+  numero       String  @db.VarChar(5)
+  complemento  String?  @db.VarChar(50)
+  bairro       String  @db.VarChar(50)
+  cidade       String  @db.VarChar(120)
+  estado       String  @db.VarChar(2)
+  telefone     String  @db.VarChar(14)
+  email        String  @db.VarChar(14)
+  createdAt    DateTime @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime @default(now()) @db.Timestamp(0)
 
   @@map("customers")
 }
