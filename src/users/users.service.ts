@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
@@ -9,7 +9,18 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   public async create(createUserDto: CreateUserDto) {
-    return this.prisma.user.create({ data: createUserDto });
+    const newData: any = {};
+
+    for (const keys of Object.keys(createUserDto)) {
+      if (createUserDto[keys]) newData[keys] = createUserDto[keys];
+    }
+    if (newData.birthAt) {
+      newData.birthAt = new Date(newData.birthAt);
+    }
+
+    return await this.prisma.user.create({
+      data: newData,
+    });
   }
 
   public async findAll() {
@@ -23,25 +34,22 @@ export class UsersService {
 
   public async update(id: number, updateUserDto: UpdateUserDto) {
     await this.IfNotExist(id);
-
-    const data: any = {};
+    const newData: any = {};
 
     for (const keys of Object.keys(updateUserDto)) {
-      console.log(updateUserDto[keys]);
-      if (updateUserDto[keys]) {
-        data[keys] = updateUserDto[keys];
-      }
+      if (updateUserDto[keys]) newData[keys] = updateUserDto[keys];
+    }
+    if (newData.birthAt) {
+      newData.birthAt = new Date(newData.birthAt);
     }
 
-    if (data.birthAt) {
-      data.birthAt = new Date(data.birthAt);
-    }
+    console.log(updateUserDto);
 
-    data.updatedAt = this.updatedData;
+    newData.updatedAt = this.updatedData;
 
     return await this.prisma.user.update({
       where: { id },
-      data,
+      data: newData,
     });
   }
 
