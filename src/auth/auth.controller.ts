@@ -1,5 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { User } from 'src/decorators/user.decorator';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 import { AuthForgetDto } from './dto/auth-forget.dto';
@@ -22,7 +24,7 @@ export class AuthController {
 
   @Post('register')
   public async register(@Body() body: AuthRegisterDto) {
-    return this.userService.create(body);
+    return this.authService.register(body);
   }
 
   @Post('forget')
@@ -33,5 +35,11 @@ export class AuthController {
   @Post('reset')
   public async reset(@Body() { password, token }: AuthResetDto) {
     return this.authService.reset(password, token);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('me')
+  public async me(@User() user) {
+    return { user };
   }
 }

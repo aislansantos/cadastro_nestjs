@@ -1,20 +1,54 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UsersService } from 'src/users/users.service';
+import { AuthRegisterDto } from './dto/auth-register.dto';
 
 @Injectable()
 export class AuthService {
+  private issuer: string = 'login';
+  private audience: string = 'user';
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
+    private readonly userService: UsersService,
   ) {}
 
-  public async createToken() {
-    // return this.jwtService.sign();
+  public createToken(user: User) {
+    return {
+      accessToken: this.jwtService.sign(
+        {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+        {
+          expiresIn: '1 day',
+          subject: String(user.id),
+          issuer: this.issuer,
+          audience: this.audience,
+        },
+      ),
+    };
   }
 
-  public async checkToken(token: string) {
-    // return this.jwtService.verify();
+  public checkToken(token: string) {
+    try {
+      const data = this.jwtService.verify(token, {
+        issuer: this.issuer,
+        audience: this.audience,
+      });
+
+      return data;
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 
   public async login(email: string, password: string) {
@@ -28,7 +62,7 @@ export class AuthService {
       throw new UnauthorizedException('Email e/ou senha incorretos');
     }
 
-    return user;
+    return this.createToken(user);
   }
 
   public async forget(email: string) {
@@ -52,7 +86,7 @@ export class AuthService {
     // TODO: Validar o token
 
     // troca da senha
-    await this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: {
         id,
       },
@@ -60,6 +94,21 @@ export class AuthService {
         password,
       },
     });
-    return true;
+    return this.createToken(user);
+  }
+
+  public async register(data: AuthRegisterDto) {
+    const user = await this.userService.create(data);
+
+    return this.createToken(user);
+  }
+
+  public isValidToken(token: string) {
+    try {
+      this.checkToken(token);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
