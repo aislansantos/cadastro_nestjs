@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/utils/decorators/roles.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/role/role.guard';
 import { Role } from 'src/utils/enums/role.enum';
