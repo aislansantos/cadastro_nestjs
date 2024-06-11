@@ -20,7 +20,7 @@ import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 // ! Regras para usuários ter acesso a area do sistema
 @UseGuards(AuthGuard, RoleGuard)
-@Roles(Role.User)
+@Roles(Role.Admin, Role.User)
 // ! decorator do Swagger para criar as separações
 @ApiTags('Customers')
 @Controller('customers')

@@ -19,7 +19,7 @@ import { UpdateSellerDto } from './dto/update-seller.dto';
 import { SellersService } from './sellers.service';
 
 @UseGuards(AuthGuard, RoleGuard)
-@Roles(Role.User)
+@Roles(Role.Admin, Role.User)
 @ApiTags('Sellers')
 @Controller('sellers')
 export class SellersController {
