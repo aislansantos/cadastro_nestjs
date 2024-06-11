@@ -1,4 +1,3 @@
-import { STATUS } from '@prisma/client';
 import {
   IsEmail,
   IsEnum,
@@ -6,6 +5,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
+import { Status } from 'src/enums/active.enum';
 
 export class CreateSellerDto {
   @IsString()
@@ -13,8 +13,8 @@ export class CreateSellerDto {
   name: string;
 
   @IsOptional()
-  @IsEnum(STATUS)
-  status: STATUS;
+  @IsEnum(Status)
+  status: Status;
 
   @IsEmail({}, { message: 'Insira um e-mail válido.' })
   email: string;

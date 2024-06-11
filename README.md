@@ -245,3 +245,5 @@ Mostra o Swagger monstrando todos os endpoint bem como testalos.
 | `id`      | `string` | **Obrigatório**. O ID do vendedor que você quer deletar |
 
 ...
+
+continuar com rotas.
