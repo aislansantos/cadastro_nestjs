@@ -1,4 +1,3 @@
-import { STATUS } from '@prisma/client';
 import {
   IsDefined,
   IsEmail,
@@ -8,11 +7,12 @@ import {
   Length,
   MinLength,
 } from 'class-validator';
+import { Status } from 'src/enums/active.enum';
 
 export class CreateCustomerDto {
   @IsOptional()
-  @IsEnum(STATUS)
-  status: STATUS;
+  @IsEnum(Status)
+  status: Status;
 
   @IsDefined({ message: 'É obrigatório nome.' })
   @IsString()

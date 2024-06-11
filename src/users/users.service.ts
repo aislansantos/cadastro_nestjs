@@ -43,8 +43,6 @@ export class UsersService {
       newData.birthAt = new Date(newData.birthAt);
     }
 
-    console.log(updateUserDto);
-
     newData.updatedAt = this.updatedData;
 
     return await this.prisma.user.update({

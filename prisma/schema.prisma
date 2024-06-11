@@ -9,17 +9,17 @@ datasource db {
 
 model Customer {
   id           Int      @id @default(autoincrement())
-  status       STATUS   @default(ativo)
+  status       Int      @default(1)
   nome         String   @db.VarChar(120)
   nomefantasia String?  @db.VarChar(120)
-  rua          String  @db.VarChar(130)
-  numero       String  @db.VarChar(5)
+  rua          String   @db.VarChar(130)
+  numero       String   @db.VarChar(5)
   complemento  String?  @db.VarChar(50)
-  bairro       String  @db.VarChar(50)
-  cidade       String  @db.VarChar(120)
-  estado       String  @db.VarChar(2)
-  telefone     String  @db.VarChar(14)
-  email        String  @db.VarChar(14)
+  bairro       String   @db.VarChar(50)
+  cidade       String   @db.VarChar(120)
+  estado       String   @db.VarChar(2)
+  telefone     String   @db.VarChar(14)
+  email        String   @db.VarChar(14)
   createdAt    DateTime @default(now()) @db.Timestamp(0)
   updatedAt    DateTime @default(now()) @db.Timestamp(0)
 
@@ -28,7 +28,7 @@ model Customer {
 
 model User {
   id        Int       @id @default(autoincrement()) @db.UnsignedInt
-  status    STATUS    @default(ativo)
+  status    Int       @default(1)
   name      String    @db.VarChar(63)
   email     String    @db.VarChar(127)
   password  String    @db.VarChar(127)
@@ -42,16 +42,11 @@ model User {
 
 model Seller {
   id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  status    STATUS   @default(ativo)
+  status    Int      @default(1)
   name      String   @db.VarChar(63)
   email     String   @db.VarChar(127)
   createdAt DateTime @default(now()) @db.Timestamp(0)
   updatedAt DateTime @default(now()) @db.Timestamp(0)
 
   @@map("sellers")
-}
-
-enum STATUS {
-  ativo
-  inativo
 }
