@@ -43,7 +43,7 @@ export class UsersService {
       newData.birthAt = new Date(newData.birthAt);
     }
 
-    newData.updatedAt = this.updatedData;
+    data.updatedAt = this.updatedData;
 
     return await this.prisma.user.update({
       where: { id },
