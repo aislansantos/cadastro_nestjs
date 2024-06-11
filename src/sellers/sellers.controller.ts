@@ -1,18 +1,25 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
-import { SellersService } from './sellers.service';
+import { ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/utils/decorators/roles.decorator';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { RoleGuard } from 'src/guards/role/role.guard';
+import { Role } from 'src/utils/enums/role.enum';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { SellersService } from './sellers.service';
 
+@UseGuards(AuthGuard, RoleGuard)
+@Roles(Role.User)
 @ApiTags('Sellers')
 @Controller('sellers')
 export class SellersController {

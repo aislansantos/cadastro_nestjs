@@ -1,13 +1,13 @@
 import {
-  IsDefined,
-  IsEmail,
-  IsEnum,
-  IsOptional,
-  IsString,
-  Length,
-  MinLength,
+    IsDefined,
+    IsEmail,
+    IsEnum,
+    IsOptional,
+    IsString,
+    Length,
+    MinLength,
 } from 'class-validator';
-import { Status } from 'src/enums/active.enum';
+import { Status } from 'src/utils/enums/active.enum';
 
 export class CreateCustomerDto {
   @IsOptional()

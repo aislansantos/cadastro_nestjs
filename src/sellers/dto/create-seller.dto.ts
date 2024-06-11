@@ -1,11 +1,11 @@
 import {
-  IsEmail,
-  IsEnum,
-  IsOptional,
-  IsString,
-  MinLength,
+    IsEmail,
+    IsEnum,
+    IsOptional,
+    IsString,
+    MinLength,
 } from 'class-validator';
-import { Status } from 'src/enums/active.enum';
+import { Status } from 'src/utils/enums/active.enum';
 
 export class CreateSellerDto {
   @IsString()
