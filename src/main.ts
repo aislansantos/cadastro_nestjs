@@ -1,7 +1,7 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.module';
 
 // ! Criando a estrutura do Swagger
 export const setupSwagger = (app: INestApplication) => {
@@ -26,6 +26,12 @@ export const setupSwagger = (app: INestApplication) => {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // enableCors ja está instalado no express, e o nest usa o express de base neste caso.
+  app.enableCors({
+    methods: '*',
+    origin: '*',
+  });
 
   // Usando o Swagger
   setupSwagger(app);
