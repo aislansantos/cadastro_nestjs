@@ -1,11 +1,12 @@
 import {
-    IsDefined,
-    IsEmail,
-    IsEnum,
-    IsOptional,
-    IsString,
-    Length,
-    MinLength,
+  IsDefined,
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+  Length,
+  Matches,
+  MinLength,
 } from 'class-validator';
 import { Status } from 'src/utils/enums/active.enum';
 
@@ -30,8 +31,9 @@ export class CreateCustomerDto {
   rua: string;
 
   @IsDefined({ message: 'É obrigatório! o numero da residencia' })
-  @IsString()
-  @MinLength(1, { message: 'Minimo de 1 caracteres no numero da residencia.' })
+  @Matches(/^(S\/N|[1-9][0-9]*)$/, {
+    message: 'Ter pelo menos um caracter numérico ou S/N',
+  })
   numero: string;
 
   @IsOptional()
