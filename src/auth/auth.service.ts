@@ -56,8 +56,6 @@ export class AuthService {
 	}
 
 	public async login(email: string, password: string) {
-		console.log(email);
-
 		const user = await this.usersRepository.findOneBy({ email });
 		if (!user) {
 			throw new UnauthorizedException("Email e/ou senha incorretos");
