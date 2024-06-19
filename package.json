@@ -18,7 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepush": "npm run test"
+    "prepush": "npm run test",
+    "typeorm:ts": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "clear:db:test": "npm run typeorm:ts schema:drop -- -d ./typeorm/data-source.ts",
+    "migrate:create": "npm run typeorm:ts migration:create -- ./typeorm/migrations/Migrate",
+    "migrate:up": "npm run typeorm:ts migration:run -- -d ./typeorm/data-source.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -29,18 +33,22 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.3.1",
     "@nestjs/throttler": "^5.1.2",
-    "@types/bcrypt": "^5.0.2",
+    "@nestjs/typeorm": "^10.0.2",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "mysql2": "^3.10.1",
     "reflect-metadata": "^0.2.0",
+    "rimraf": "^5.0.7",
     "rxjs": "^7.8.1",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/multer": "^1.4.11",
@@ -48,6 +56,7 @@
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",

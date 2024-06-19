@@ -1,30 +1,34 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { AuthService } from 'src/auth/auth.service';
-import { UsersService } from 'src/users/users.service';
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { AuthService } from "../../auth/auth.service";
+import { UsersService } from "../../users/users.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UsersService,
-  ) {}
+	constructor(
+		private readonly authService: AuthService,
+		private readonly userService: UsersService,
+	) {}
 
-  async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest();
-    const { authorization } = request.headers;
-    try {
-      //  Neste ponto se não estourarmo uma excessão temos os dados do payload
-      const data = this.authService.checkToken(
-        (authorization ?? '').split(' ')[1],
-      );
+	public async canActivate(context: ExecutionContext) {
+		const request = context.switchToHttp().getRequest();
 
-      request.tokenPayload = data;
+		const { authorization } = request.headers;
 
-      request.user = await this.userService.findOne(data.id);
+		try {
+			//  Neste ponto se não estourarmo uma excessão temos os dados do payload
+			const data = this.authService.checkToken(
+				(authorization ?? "").split(" ")[1],
+			);
 
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
+			request.tokenPayload = data;
+
+			request.user = await this.userService.findOne(data.id);
+
+			console.log(request.user);
+
+			return true;
+		} catch (e) {
+			return false;
+		}
+	}
 }
