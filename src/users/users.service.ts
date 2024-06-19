@@ -1,4 +1,8 @@
-import { BadGatewayException, Injectable } from "@nestjs/common";
+import {
+	BadGatewayException,
+	Injectable,
+	NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { Repository } from "typeorm";
@@ -57,5 +61,15 @@ export class UsersService {
 
 	public async remove(id: number) {
 		// return await this.prisma.user.delete({ where: { id } });
+	}
+
+	private async exists(id: number) {
+		if (
+			!(await this.usersRepository.exists({
+				where: {},
+			}))
+		) {
+			throw new NotFoundException(`O usuário com o ${id} não existe.`);
+		}
 	}
 }
