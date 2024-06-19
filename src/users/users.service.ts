@@ -45,22 +45,21 @@ export class UsersService {
 	}
 
 	public async update(id: number, updateUserDto: UpdateUserDto) {
-		// const newData: any = {};
-		// for (const keys of Object.keys(updateUserDto)) {
-		//   if (updateUserDto[keys]) newData[keys] = updateUserDto[keys];
-		// }
-		// if (newData.birthAt) {
-		//   newData.birthAt = new Date(newData.birthAt);
-		// }
-		// newData.updatedAt = this.updatedData;
-		// return await this.prisma.user.update({
-		//   where: { id },
-		//   data: newData,
-		// });
+		if (updateUserDto.birthAt) {
+			updateUserDto.birthAt = String(new Date(updateUserDto.birthAt));
+		}
+		if (updateUserDto.password) {
+			const salt = await bcrypt.genSalt();
+			updateUserDto.password = await bcrypt.hash(updateUserDto.password, salt);
+		}
+		return await this.usersRepository.update(id, updateUserDto);
 	}
 
 	public async remove(id: number) {
-		// return await this.prisma.user.delete({ where: { id } });
+		await this.exists(id);
+		await this.usersRepository.delete(id);
+
+		return true;
 	}
 
 	private async exists(id: number) {

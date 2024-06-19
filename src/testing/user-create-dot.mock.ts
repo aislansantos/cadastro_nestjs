@@ -1,6 +1,6 @@
-import { CreateUserDto } from "../../users/dto/create-user.dto";
-import { Status } from "../enums/active.enum";
-import { Role } from "../enums/role.enum";
+import { CreateUserDto } from "../users/dto/create-user.dto";
+import { Status } from "../utils/enums/active.enum";
+import { Role } from "../utils/enums/role.enum";
 
 export const createUserDTO: CreateUserDto = {
 	name: "Aislan",
