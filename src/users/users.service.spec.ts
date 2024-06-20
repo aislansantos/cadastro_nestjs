@@ -23,7 +23,7 @@ describe("UsersService", () => {
 	});
 
 	describe("Defined", () => {
-		it("should be defined UserService", () => {
+		it("should be defined UserService and userRepository", () => {
 			expect(userService).toBeDefined();
 			expect(userRepository).toBeDefined();
 		});
