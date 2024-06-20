@@ -4,7 +4,7 @@ import {
 	IsEnum,
 	IsOptional,
 	IsString,
-	IsStrongPassword,
+	IsStrongPassword
 } from "class-validator";
 import { Status } from "src/utils/enums/active.enum";
 import { Role } from "src/utils/enums/role.enum";
@@ -23,12 +23,12 @@ export class CreateUserDto {
 	@IsStrongPassword(
 		{
 			minLength: 6,
-			minSymbols: 0,
+			minSymbols: 0
 		},
 		{
 			message:
-				"Tem de ter caractere pelo menos 6 caracteres sendo 1 maiusculo, 1 minusculo, 1 numero.",
-		},
+				"Tem de ter caractere pelo menos 6 caracteres sendo 1 maiusculo, 1 minusculo, 1 numero."
+		}
 	)
 	password: string;
 

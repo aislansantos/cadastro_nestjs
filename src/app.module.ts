@@ -18,14 +18,14 @@ import { UsersModule } from "./users/users.module";
 	imports: [
 		// Para enxergar o dados do .ENV
 		ConfigModule.forRoot({
-			envFilePath: process.env.ENV === "test" ? ".env.test" : ".env",
+			envFilePath: process.env.ENV === "test" ? ".env.test" : ".env"
 		}),
 		// Ferramenta para precaver ataques, RateLimit
 		ThrottlerModule.forRoot([
 			{
 				ttl: 60000,
-				limit: 10,
-			},
+				limit: 10
+			}
 		]),
 		forwardRef(() => UsersModule),
 		forwardRef(() => AuthModule),
@@ -38,8 +38,8 @@ import { UsersModule } from "./users/users.module";
 			database: process.env.DB_DATABASE,
 			entities: [UserEntity],
 			synchronize:
-				process.env.ENV === "development" || process.env.ENV === "test",
-		}),
+				process.env.ENV === "development" || process.env.ENV === "test"
+		})
 	],
 	controllers: [AppController],
 	// Aqui protegempos toda a aplicação de tentativas seguida de acesso, podemos colocar como um guard em uma rota especifica
@@ -47,8 +47,8 @@ import { UsersModule } from "./users/users.module";
 		AppService,
 		{
 			provide: APP_GUARD,
-			useClass: ThrottlerGuard,
-		},
-	],
+			useClass: ThrottlerGuard
+		}
+	]
 })
 export class AppModule {}

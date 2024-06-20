@@ -10,7 +10,7 @@ export class RoleGuard implements CanActivate {
 	public async canActivate(context: ExecutionContext) {
 		const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
 			context.getHandler(),
-			context.getClass(),
+			context.getClass()
 		]);
 
 		if (!requiredRoles) {

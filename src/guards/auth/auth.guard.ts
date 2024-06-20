@@ -6,7 +6,7 @@ import { UsersService } from "../../users/users.service";
 export class AuthGuard implements CanActivate {
 	constructor(
 		private readonly authService: AuthService,
-		private readonly userService: UsersService,
+		private readonly userService: UsersService
 	) {}
 
 	public async canActivate(context: ExecutionContext) {
@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
 		try {
 			//  Neste ponto se não estourarmo uma excessão temos os dados do payload
 			const data = this.authService.checkToken(
-				(authorization ?? "").split(" ")[1],
+				(authorization ?? "").split(" ")[1]
 			);
 
 			request.tokenPayload = data;

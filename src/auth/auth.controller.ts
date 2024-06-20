@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { User } from "src/decorators/user.decorator";
-import { AuthGuard } from "src/guards/auth/auth.guard";
+import { User } from "../utils/decorators/user.decorator";
+import { AuthGuard } from "../guards/auth/auth.guard";
 import { UsersService } from "src/users/users.service";
 import { UserEntity } from "../users/entities/user.entity";
 import { AuthService } from "./auth.service";
@@ -15,7 +15,7 @@ import { AuthResetDto } from "./dto/auth-reset.dto";
 export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
-		private readonly userService: UsersService,
+		private readonly userService: UsersService
 	) {}
 
 	@Post("login")

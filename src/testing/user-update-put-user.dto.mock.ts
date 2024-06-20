@@ -8,5 +8,5 @@ export const updatePutUserDTO: UpdateUserDto = {
 	password: "Aa123456",
 	birthAt: "1985-11-05",
 	role: Role.Admin,
-	status: Status.active,
+	status: Status.active
 };

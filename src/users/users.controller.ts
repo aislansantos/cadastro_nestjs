@@ -7,7 +7,7 @@ import {
 	ParseIntPipe,
 	Patch,
 	Post,
-	UseGuards,
+	UseGuards
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/decorators/roles.decorator";
@@ -45,7 +45,7 @@ export class UsersController {
 	@Patch(":id")
 	public async update(
 		@Param("id", ParseIntPipe) id: number,
-		@Body() updateUserDto: UpdateUserDto,
+		@Body() updateUserDto: UpdateUserDto
 	) {
 		return await this.usersService.update(+id, updateUserDto);
 	}

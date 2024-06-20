@@ -12,7 +12,7 @@ export const userEntityList: UserEntity[] = [
 		role: Role.Admin,
 		createdAt: String(new Date()),
 		updatedAt: String(new Date()),
-		status: Status.active,
+		status: Status.active
 	},
 	{
 		name: "Augusto Santos",
@@ -23,6 +23,6 @@ export const userEntityList: UserEntity[] = [
 		role: Role.Admin,
 		createdAt: String(new Date()),
 		updatedAt: String(new Date()),
-		status: Status.active,
-	},
+		status: Status.active
+	}
 ];

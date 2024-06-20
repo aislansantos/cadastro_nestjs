@@ -1,7 +1,7 @@
 import {
 	BadGatewayException,
 	Injectable,
-	NotFoundException,
+	NotFoundException
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
@@ -14,15 +14,15 @@ import { UserEntity } from "./entities/user.entity";
 export class UsersService {
 	constructor(
 		@InjectRepository(UserEntity)
-		private readonly usersRepository: Repository<UserEntity>,
+		private readonly usersRepository: Repository<UserEntity>
 	) {}
 
 	public async create(data: CreateUserDto) {
 		if (
 			await this.usersRepository.exists({
 				where: {
-					email: data.email,
-				},
+					email: data.email
+				}
 			})
 		)
 			throw new BadGatewayException("Este e-mail já existe.");
@@ -40,7 +40,7 @@ export class UsersService {
 	public async findOne(id: number) {
 		await this.usersRepository.findOne({ where: { id } });
 		return await this.usersRepository.findOneBy({
-			id,
+			id
 		});
 	}
 
@@ -65,7 +65,7 @@ export class UsersService {
 	private async exists(id: number) {
 		if (
 			!(await this.usersRepository.exists({
-				where: {},
+				where: {}
 			}))
 		) {
 			throw new NotFoundException(`O usuário com o ${id} não existe.`);
