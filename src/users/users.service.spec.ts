@@ -15,7 +15,7 @@ describe("UsersService", () => {
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [UsersService, userRepositoryMock],
+			providers: [UsersService, userRepositoryMock]
 		}).compile();
 
 		userService = module.get<UsersService>(UsersService);
@@ -40,12 +40,12 @@ describe("UsersService", () => {
 	});
 
 	describe("Read", () => {
-		it("should be finded all users", async () => {
+		it("should be found all users", async () => {
 			const result = await userService.findAll();
 
 			expect(result).toBe(userEntityList);
 		});
-		it("should be finded one user", async () => {
+		it("should be found one user", async () => {
 			const result = await userService.findOne(1);
 
 			expect(result).toBe(userEntityList[0]);
