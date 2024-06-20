@@ -1,7 +1,7 @@
 import {
 	BadRequestException,
 	Injectable,
-	UnauthorizedException,
+	UnauthorizedException
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -21,7 +21,7 @@ export class AuthService {
 		private readonly jwtService: JwtService,
 		private readonly userService: UsersService,
 		@InjectRepository(UserEntity)
-		private readonly usersRepository: Repository<UserEntity>,
+		private readonly usersRepository: Repository<UserEntity>
 	) {}
 
 	public createToken(user: UserEntity) {
@@ -30,15 +30,15 @@ export class AuthService {
 				{
 					id: user.id,
 					name: user.name,
-					email: user.email,
+					email: user.email
 				},
 				{
 					expiresIn: "1 day",
 					subject: String(user.id),
 					issuer: this.issuer,
-					audience: this.audience,
-				},
-			),
+					audience: this.audience
+				}
+			)
 		};
 	}
 
@@ -46,7 +46,7 @@ export class AuthService {
 		try {
 			const data = this.jwtService.verify(token, {
 				issuer: this.issuer,
-				audience: this.audience,
+				audience: this.audience
 			});
 
 			return data;
@@ -67,6 +67,7 @@ export class AuthService {
 		return this.createToken(user);
 	}
 
+	// TODO: implementar de esqueci a senha.
 	public async forget(email: string) {
 		// const user = await this.prisma.user.findFirst({
 		//   where: {
@@ -80,6 +81,7 @@ export class AuthService {
 		// return true;
 	}
 
+	// TODO: implementar o reset de senha
 	public async reset(password: string, token: string) {
 		// const id = 0;
 		// // TODO: Validar o token
