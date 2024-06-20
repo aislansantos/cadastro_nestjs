@@ -69,16 +69,12 @@ export class AuthService {
 
 	// TODO: implementar de esqueci a senha.
 	public async forget(email: string) {
-		// const user = await this.prisma.user.findFirst({
-		//   where: {
-		//     email,
-		//   },
-		// });
-		// if (!user) {
-		//   throw new UnauthorizedException('E-mail está incorreto.');
-		// }
-		// // TODO: enviar email ...
-		// return true;
+		const user = await this.usersRepository.findOneBy({ email });
+		if (!user) {
+			throw new UnauthorizedException("E-mail está incorreto.");
+		}
+		// TODO: enviar email ...
+		return true;
 	}
 
 	// TODO: implementar o reset de senha
