@@ -34,7 +34,9 @@ export class UsersService {
 	}
 
 	public async findAll() {
-		return await this.usersRepository.find();
+		return await this.usersRepository.find({
+			select: ["id", "name", "email"]
+		});
 	}
 
 	public async findOne(id: number) {
@@ -46,7 +48,7 @@ export class UsersService {
 
 	public async update(id: number, updateUserDto: UpdateUserDto) {
 		if (updateUserDto.birthAt) {
-			updateUserDto.birthAt = String(new Date(updateUserDto.birthAt));
+			updateUserDto.birthAt = new Date(updateUserDto.birthAt);
 		}
 		if (updateUserDto.password) {
 			const salt = await bcrypt.genSalt();
