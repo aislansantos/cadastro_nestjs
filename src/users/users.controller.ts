@@ -10,10 +10,10 @@ import {
 	UseGuards
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { AuthGuard } from "src/guards/auth/auth.guard";
-import { RoleGuard } from "src/guards/role/role.guard";
-import { Role } from "src/utils/enums/role.enum";
+import { AuthGuard } from "../guards/auth/auth.guard";
+import { RoleGuard } from "../guards/role/role.guard";
 import { Roles } from "../utils/decorators/roles.decorator";
+import { Role } from "../utils/enums/role.enum";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
@@ -36,6 +36,7 @@ export class UsersController {
 		return await this.usersService.findAll();
 	}
 
+	@Roles(Role.Admin)
 	@Get(":id")
 	public async findOne(@Param("id", ParseIntPipe) id: number) {
 		return await this.usersService.findOne(+id);
@@ -47,7 +48,7 @@ export class UsersController {
 		@Param("id", ParseIntPipe) id: number,
 		@Body() updateUserDto: UpdateUserDto
 	) {
-		return await this.usersService.update(+id, updateUserDto);
+		return await this.usersService.update(id, updateUserDto);
 	}
 
 	@Roles(Role.Admin)

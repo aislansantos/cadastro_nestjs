@@ -6,7 +6,7 @@ export const updatePutUserDTO: UpdateUserDto = {
 	name: "Aislan",
 	email: "aislan.santos@gmail.com",
 	password: "Aa123456",
-	birthAt: "1985-11-05",
+	birthAt: new Date("1985-11-05"),
 	role: Role.Admin,
 	status: Status.active
 };
