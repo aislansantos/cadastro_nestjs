@@ -3,7 +3,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "../guards/auth/auth.guard";
 import { UserEntity } from "../users/entities/user.entity";
 import { UsersService } from "../users/users.service";
-import { User } from "../utils/decorators/user.decorator_";
+import { User } from "../utils/decorators/user.decorator";
 import { AuthService } from "./auth.service";
 import { AuthForgetDto } from "./dto/auth-forget.dto";
 import { AuthLoginDto } from "./dto/auth-login.dto";

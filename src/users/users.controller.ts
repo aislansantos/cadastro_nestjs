@@ -48,7 +48,7 @@ export class UsersController {
 		@Param("id", ParseIntPipe) id: number,
 		@Body() updateUserDto: UpdateUserDto
 	) {
-		return await this.usersService.update(+id, updateUserDto);
+		return await this.usersService.update(id, updateUserDto);
 	}
 
 	@Roles(Role.Admin)

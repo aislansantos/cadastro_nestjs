@@ -6,10 +6,10 @@ export const userServiceMock = {
 	useValue: {
 		show: jest.fn().mockResolvedValue(userEntityList[0]),
 		create: jest.fn().mockResolvedValue(userEntityList[0]),
-		list: jest.fn().mockResolvedValue(userEntityList),
-		putUpdate: jest.fn().mockResolvedValue(userEntityList[0]),
-		patchUpdate: jest.fn().mockResolvedValue(userEntityList[0]),
-		delete: jest.fn().mockResolvedValue(true),
+		findAll: jest.fn().mockResolvedValue(userEntityList),
+		findOne: jest.fn().mockResolvedValue(userEntityList[0]),
+		update: jest.fn().mockResolvedValue(userEntityList[0]),
+		remove: jest.fn().mockResolvedValue(true),
 		exists: jest.fn().mockResolvedValue(true)
 	}
 };
