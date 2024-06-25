@@ -79,7 +79,7 @@ export class AuthService {
 		const token = this.jwtService.sign(
 			{
 				// colocar o payload para gerar o token de reset de senha.
-				user: user.id
+				id: user.id
 			},
 			{
 				expiresIn: "30 minutes",
@@ -104,18 +104,29 @@ export class AuthService {
 
 	// TODO: implementar o reset de senha
 	public async reset(password: string, token: string) {
-		// const id = 0;
+		try {
+			const data = this.jwtService.verify(token, {
+				issuer: "forget",
+				audience: "users"
+			});
+
+			if (isNaN(Number(data.id))) {
+				throw new BadRequestException("Token inválido");
+			}
+
+			password = await bcrypt.hash(password, await bcrypt.genSalt());
+
+			await this.userService.update(Number(data.id), { password });
+
+			const user = await this.userService.findOne(Number(data.id));
+
+			console.log(user);
+
+			return this.createToken(user);
+		} catch (e) {
+			throw new BadRequestException(e);
+		}
 		// TODO: Validar o token
-		// troca da senha
-		// const user = await this.prisma.user.update({
-		//   where: {
-		//     id,
-		//   },
-		//   data: {
-		//     password,
-		//   },
-		// });
-		// return this.createToken(user);
 	}
 
 	public async register(data: AuthRegisterDto) {
