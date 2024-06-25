@@ -40,12 +40,12 @@ describe("UsersService", () => {
 	});
 
 	describe("Read", () => {
-		it("should be found all users", async () => {
+		it("should found all users", async () => {
 			const result = await userService.findAll();
 
 			expect(result).toBe(userEntityList);
 		});
-		it("should be found one user", async () => {
+		it("should found one user", async () => {
 			const result = await userService.findOne(1);
 
 			expect(result).toBe(userEntityList[0]);
