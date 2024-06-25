@@ -62,6 +62,7 @@ export class AuthService {
 		if (!user) {
 			throw new UnauthorizedException("Email e/ou senha incorretos");
 		}
+
 		const passwordCompare = await bcrypt.compare(password, user.password);
 		if (!passwordCompare) {
 			throw new UnauthorizedException("Email e/ou senha incorretos");
@@ -91,7 +92,7 @@ export class AuthService {
 
 		await this.mailer.sendMail({
 			subject: "Recuperação de senha.",
-			to: "aislan.santos@gmail.com",
+			to: `${email}`,
 			template: "forget",
 			context: {
 				name: user.name,
@@ -110,17 +111,17 @@ export class AuthService {
 				audience: "users"
 			});
 
+			console.log(data);
+
 			if (isNaN(Number(data.id))) {
 				throw new BadRequestException("Token inválido");
 			}
 
 			password = await bcrypt.hash(password, await bcrypt.genSalt());
 
-			await this.userService.update(Number(data.id), { password });
+			await this.usersRepository.update(Number(data.id), { password });
 
 			const user = await this.userService.findOne(Number(data.id));
-
-			console.log(user);
 
 			return this.createToken(user);
 		} catch (e) {

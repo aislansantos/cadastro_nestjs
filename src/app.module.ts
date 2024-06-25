@@ -47,12 +47,12 @@ import { UsersModule } from "./users/users.module";
 				host: "smtp.ethereal.email",
 				port: 587,
 				auth: {
-					user: "timmy.dare@ethereal.email",
-					pass: "4rghRe7PFJVgyf5pNd"
+					user: "destiney.yost@ethereal.email",
+					pass: "PU2gQ55h8knZ2hNg8a"
 				}
 			},
 			defaults: {
-				from: '"Timmy" <timmy.dare@ethereal.email>'
+				from: '"Destiney Yost" <destiney.yost@ethereal.email>'
 			},
 			template: {
 				dir: __dirname + "/templates",
