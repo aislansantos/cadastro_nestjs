@@ -1,3 +1,4 @@
+import { MailerService } from "@nestjs-modules/mailer";
 import {
 	BadRequestException,
 	Injectable,
@@ -6,8 +7,8 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
-import { UsersService } from "..//users/users.service";
 import { Repository } from "typeorm";
+import { UsersService } from "..//users/users.service";
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { UserEntity } from "../users/entities/user.entity";
 import { AuthRegisterDto } from "./dto/auth-register.dto";
@@ -20,6 +21,7 @@ export class AuthService {
 	constructor(
 		private readonly jwtService: JwtService,
 		private readonly userService: UsersService,
+		private readonly mailer: MailerService,
 		@InjectRepository(UserEntity)
 		private readonly usersRepository: Repository<UserEntity>
 	) {}
@@ -60,6 +62,7 @@ export class AuthService {
 		if (!user) {
 			throw new UnauthorizedException("Email e/ou senha incorretos");
 		}
+
 		const passwordCompare = await bcrypt.compare(password, user.password);
 		if (!passwordCompare) {
 			throw new UnauthorizedException("Email e/ou senha incorretos");
@@ -73,24 +76,58 @@ export class AuthService {
 		if (!user) {
 			throw new UnauthorizedException("E-mail está incorreto.");
 		}
-		// TODO: enviar email ...
-		return true;
+		// TODO? enviar email - Daqui pra frente implementação do envio de email pelo nodemailer
+		const token = this.jwtService.sign(
+			{
+				// colocar o payload para gerar o token de reset de senha.
+				id: user.id
+			},
+			{
+				expiresIn: "30 minutes",
+				subject: String(user.id),
+				issuer: "forget",
+				audience: "users"
+			}
+		);
+
+		await this.mailer.sendMail({
+			subject: "Recuperação de senha.",
+			to: `${email}`,
+			template: "forget",
+			context: {
+				name: user.name,
+				token
+			}
+		});
+
+		return { success: true };
 	}
 
 	// TODO: implementar o reset de senha
 	public async reset(password: string, token: string) {
-		// const id = 0;
-		// // TODO: Validar o token
-		// // troca da senha
-		// const user = await this.prisma.user.update({
-		//   where: {
-		//     id,
-		//   },
-		//   data: {
-		//     password,
-		//   },
-		// });
-		// return this.createToken(user);
+		try {
+			const data = this.jwtService.verify(token, {
+				issuer: "forget",
+				audience: "users"
+			});
+
+			console.log(data);
+
+			if (isNaN(Number(data.id))) {
+				throw new BadRequestException("Token inválido");
+			}
+
+			password = await bcrypt.hash(password, await bcrypt.genSalt());
+
+			await this.usersRepository.update(Number(data.id), { password });
+
+			const user = await this.userService.findOne(Number(data.id));
+
+			return this.createToken(user);
+		} catch (e) {
+			throw new BadRequestException(e);
+		}
+		// TODO: Validar o token
 	}
 
 	public async register(data: AuthRegisterDto) {
@@ -102,12 +139,11 @@ export class AuthService {
 	}
 
 	public isValidToken(token: string) {
-		//   try {
-		//     this.checkToken(token);
-		//     return true;
-		//   } catch (e) {
-		//     return false;
-		//   }
-		// }
+		try {
+			this.checkToken(token);
+			return true;
+		} catch (e) {
+			return false;
+		}
 	}
 }
