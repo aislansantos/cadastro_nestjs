@@ -14,8 +14,6 @@ export class AuthGuard implements CanActivate {
 
 		const { authorization } = request.headers;
 
-		console.log(authorization);
-
 		try {
 			//  Neste ponto se não estourarmo uma excessão temos os dados do payload
 			const data = this.authService.checkToken(
@@ -23,7 +21,6 @@ export class AuthGuard implements CanActivate {
 			);
 
 			request.tokenPayload = data;
-			console.log(data);
 
 			request.user = await this.userService.findOne(data.id);
 
