@@ -11,13 +11,13 @@ export const authServiceMock = {
 			if (token === "validAccessToken") {
 				return jwtPayload;
 			} else {
-				throw new UnauthorizedException("Invalid token"); // Lançar com a mensagem correta
+				throw new UnauthorizedException("Invalid token");
 			}
 		}),
-		isValidToken: jest.fn((token: string) => token === "validAccessToken"), // Mockar isValidToken para verificar se o token é válido
+		isValidToken: jest.fn((token: string) => token === accessToken),
 		login: jest.fn().mockResolvedValue({ accessToken }),
 		forget: jest.fn().mockResolvedValue({ success: true }),
-		reset: jest.fn().mockReturnValue({ accessToken }),
-		register: jest.fn().mockReturnValue({ accessToken })
+		reset: jest.fn().mockResolvedValue({ accessToken }),
+		register: jest.fn().mockResolvedValue({ accessToken })
 	}
 };

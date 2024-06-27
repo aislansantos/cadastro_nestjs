@@ -13,6 +13,8 @@ export class AuthGuardMock implements CanActivate {
 		const request = context.switchToHttp().getRequest();
 		const { authorization } = request.headers;
 
+		console.log(authorization);
+
 		// Verifica se o cabeçalho de autorização existe e começa com "Bearer "
 		if (!authorization || !authorization.startsWith("Bearer ")) {
 			throw new UnauthorizedException();

@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
 
 		try {
 			if (!authorization || !authorization.startsWith("Bearer ")) {
-				throw new UnauthorizedException();
+				throw new UnauthorizedException("Unauthorized");
 			}
 
 			const token = authorization.split(" ")[1];
@@ -31,7 +31,7 @@ export class AuthGuard implements CanActivate {
 
 			return true;
 		} catch (e) {
-			throw new UnauthorizedException();
+			throw new UnauthorizedException("Unauthorized");
 		}
 	}
 }

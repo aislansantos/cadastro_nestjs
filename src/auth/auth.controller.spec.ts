@@ -32,6 +32,7 @@ describe("AuthController", () => {
 	describe("Authentication Flow", () => {
 		it("login method", async () => {
 			const result = await authController.login(authLoginDto);
+
 			expect(result.accessToken).toBe(accessToken);
 		});
 
