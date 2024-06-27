@@ -15,7 +15,7 @@ export class CreateUserDto {
 
 	@IsOptional()
 	@IsEnum(Status)
-	status: number;
+	status?: number;
 
 	@IsEmail()
 	email: string;
@@ -38,5 +38,5 @@ export class CreateUserDto {
 
 	@IsOptional()
 	@IsEnum(Role)
-	role: number;
+	role?: number;
 }

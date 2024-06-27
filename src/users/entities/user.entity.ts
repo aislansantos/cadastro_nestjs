@@ -54,4 +54,16 @@ export class UserEntity {
 
 	@UpdateDateColumn()
 	updatedAt?: Date;
+
+	constructor(user?: Partial<UserEntity>) {
+		this.id = user?.id;
+		this.name = user?.name;
+		this.email = user?.email;
+		this.password = user?.password;
+		this.birthAt = user?.birthAt;
+		this.role = user?.role;
+		this.status = user?.status;
+		this.createdAt = user?.createdAt;
+		this.updatedAt = user?.updatedAt;
+	}
 }

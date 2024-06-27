@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AuthGuard } from "../guards/auth/auth.guard";
 import { RoleGuard } from "../guards/role/role.guard";
 import { AuthGuardMock } from "../testing/guard-auth.mock";
+import { RoleGuardMock } from "../testing/guard-role.mock";
 import { createUserDTO } from "../testing/user-create-dot.mock";
 import { userEntityList } from "../testing/user-entity-list.mock";
 import { userServiceMock } from "../testing/user-service.mock";
@@ -18,7 +19,7 @@ describe("UsersController", () => {
 			.overrideGuard(AuthGuard)
 			.useValue(AuthGuardMock)
 			.overrideGuard(RoleGuard)
-			.useValue(AuthGuardMock)
+			.useValue(RoleGuardMock)
 			.compile();
 
 		userController = module.get<UsersController>(UsersController);
@@ -34,14 +35,31 @@ describe("UsersController", () => {
 			const result = await userController.create(createUserDTO);
 
 			expect(result).toBe(userEntityList[0]);
+			expect(userServiceMock.useValue.create).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.useValue.create).toHaveBeenCalledWith(
+				createUserDTO
+			);
 		});
 	});
 
-	describe("Validated Read", () => {
-		it("Should found all users", async () => {
+	describe("validated finds methods", () => {
+		it("should return a user list entity successfully", async () => {
+			// Act
 			const result = await userController.findAll();
 
-			expect(result).toBe(userEntityList);
+			// Assert
+			expect(result).toEqual(userEntityList);
+			expect(typeof result).toBe("object");
+			expect(userServiceMock.useValue.findAll).toHaveBeenCalledTimes(1);
+		});
+		it("shoul throw an exception", () => {
+			// Arrange
+			jest
+				.spyOn(userServiceMock.useValue, "findAll")
+				.mockRejectedValueOnce(new Error());
+
+			// Assert
+			expect(userController.findAll()).rejects.toThrow(Error);
 		});
 		it("Should found one user", async () => {
 			const result = await userController.findOne(1);

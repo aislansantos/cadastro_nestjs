@@ -2,7 +2,6 @@ import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "../guards/auth/auth.guard";
 import { UserEntity } from "../users/entities/user.entity";
-import { UsersService } from "../users/users.service";
 import { User } from "../utils/decorators/user.decorator";
 import { AuthService } from "./auth.service";
 import { AuthForgetDto } from "./dto/auth-forget.dto";
@@ -13,10 +12,7 @@ import { AuthResetDto } from "./dto/auth-reset.dto";
 @ApiTags("Auths")
 @Controller("auth")
 export class AuthController {
-	constructor(
-		private readonly authService: AuthService,
-		private readonly userService: UsersService
-	) {}
+	constructor(private readonly authService: AuthService) {}
 
 	@Post("login")
 	public async login(@Body() { email, password }: AuthLoginDto) {
@@ -40,6 +36,7 @@ export class AuthController {
 
 	@UseGuards(AuthGuard)
 	@Post("me")
+	// public async me(@User() user: UserEntity, @Req() { tokenPayload }) { - pegar os dados de payload para usar nos testes
 	public async me(@User() user: UserEntity) {
 		return user;
 	}

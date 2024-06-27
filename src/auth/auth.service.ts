@@ -105,13 +105,12 @@ export class AuthService {
 
 	// TODO: implementar o reset de senha
 	public async reset(password: string, token: string) {
+		// TODO: Validar o token
 		try {
 			const data = this.jwtService.verify(token, {
 				issuer: "forget",
 				audience: "users"
 			});
-
-			console.log(data);
 
 			if (isNaN(Number(data.id))) {
 				throw new BadRequestException("Token inválido");
@@ -127,7 +126,6 @@ export class AuthService {
 		} catch (e) {
 			throw new BadRequestException(e);
 		}
-		// TODO: Validar o token
 	}
 
 	public async register(data: AuthRegisterDto) {
