@@ -36,6 +36,7 @@ export class AuthController {
 
 	@UseGuards(AuthGuard)
 	@Post("me")
+	// public async me(@User() user: UserEntity, @Req() { tokenPayload }) { - pegar os dados de payload para usar nos testes
 	public async me(@User() user: UserEntity) {
 		return user;
 	}
