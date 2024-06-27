@@ -1,3 +1,4 @@
+import { BadGatewayException, NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -37,6 +38,15 @@ describe("UsersService", () => {
 
 			expect(result).toBe(userEntityList[0]);
 		});
+		it("should be return user exists", async () => {
+			try {
+				await userService.create(userEntityList[0]);
+				fail("Expected BadGatewayException to be thrown");
+			} catch (error) {
+				expect(error).toBeInstanceOf(BadGatewayException);
+				expect(error.message).toBe("Este e-mail já existe.");
+			}
+		});
 	});
 
 	describe("Read", () => {
@@ -71,6 +81,22 @@ describe("UsersService", () => {
 			const result = await userService.remove(1);
 
 			expect(result).toBe(true);
+		});
+	});
+
+	describe("Exists", () => {
+		it("User not exists", async () => {
+			jest.spyOn(userRepository, "exists").mockResolvedValueOnce(false);
+
+			try {
+				await userService.exists(userEntityList[0].id);
+				fail("Expected NotFoundException to be thrown");
+			} catch (error) {
+				expect(error).toBeInstanceOf(NotFoundException);
+				expect(error.message).toBe(
+					`O usuário com o ${userEntityList[0].id} não existe.`
+				);
+			}
 		});
 	});
 });

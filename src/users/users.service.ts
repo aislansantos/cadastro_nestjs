@@ -64,10 +64,10 @@ export class UsersService {
 		return true;
 	}
 
-	private async exists(id: number) {
+	public async exists(id: number) {
 		if (
 			!(await this.usersRepository.exists({
-				where: {}
+				where: { id }
 			}))
 		) {
 			throw new NotFoundException(`O usuário com o ${id} não existe.`);
