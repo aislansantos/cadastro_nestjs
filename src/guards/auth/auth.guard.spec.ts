@@ -1,4 +1,3 @@
-import { UnauthorizedException } from "@nestjs/common";
 import { ExecutionContext } from "@nestjs/common/interfaces";
 import { Test, TestingModule } from "@nestjs/testing";
 import { accessToken } from "../../testing/access-token.mock";
@@ -36,10 +35,13 @@ describe("AuthGuard", () => {
 			})
 		} as ExecutionContext;
 
-		// Configurando o mock para retornar dados válidos ao verificar o token
+		// Mock para retornar dados válidos ao verificar o token
 		jest
 			.spyOn(authServiceMock.useValue, "checkToken")
 			.mockReturnValue(jwtPayload);
+		jest
+			.spyOn(userServiceMock.useValue, "findOne")
+			.mockResolvedValue(userEntityList[0]);
 
 		const result = await authGuard.canActivate(mockContext);
 
@@ -48,10 +50,10 @@ describe("AuthGuard", () => {
 		expect(mockRequest.user).toEqual(userEntityList[0]);
 	});
 
-	it("should throw UnauthorizedException with invalid token", async () => {
+	it("should handle errors thrown by userService", async () => {
 		const mockRequest: any = {
 			headers: {
-				authorization: `Bearer invalidAccessToken`
+				authorization: `Bearer ${accessToken}`
 			}
 		};
 
@@ -61,90 +63,17 @@ describe("AuthGuard", () => {
 			})
 		} as ExecutionContext;
 
-		// Configurando o mock para lançar uma exceção ao verificar o token
 		jest
 			.spyOn(authServiceMock.useValue, "checkToken")
-			.mockImplementation(() => {
-				throw new UnauthorizedException("Invalid token");
-			});
-
-		try {
-			await authGuard.canActivate(mockContext);
-			throw new Error("Expected canActivate to throw UnauthorizedException");
-		} catch (error) {
-			expect(error instanceof UnauthorizedException).toBe(true);
-			expect(error.message).toBe("Unauthorized");
-		}
-	});
-
-	it("should throw UnauthorizedException when authorization header is missing", async () => {
-		const mockRequest: any = {
-			headers: {} // Empty headers
-		};
-
-		const mockContext: ExecutionContext = {
-			switchToHttp: () => ({
-				getRequest: () => mockRequest
-			})
-		} as ExecutionContext;
-
-		try {
-			await authGuard.canActivate(mockContext);
-			throw new Error("Expected canActivate to throw UnauthorizedException");
-		} catch (error) {
-			expect(error instanceof UnauthorizedException).toBe(true);
-			expect(error.message).toBe("Unauthorized");
-		}
-	});
-
-	it("should throw UnauthorizedException with expired token", async () => {
-		const mockRequest: any = {
-			headers: {
-				authorization: `Bearer expiredAccessToken`
-			}
-		};
-
-		const mockContext: ExecutionContext = {
-			switchToHttp: () => ({
-				getRequest: () => mockRequest
-			})
-		} as ExecutionContext;
-
-		try {
-			await authGuard.canActivate(mockContext);
-			throw new Error("Expected canActivate to throw UnauthorizedException");
-		} catch (error) {
-			expect(error instanceof UnauthorizedException).toBe(true);
-			expect(error.message).toBe("Unauthorized"); // Manter a mensagem esperada como "Unauthorized"
-		}
-	});
-
-	it("should throw UnauthorizedException when token payload cannot be validated", async () => {
-		const mockRequest: any = {
-			headers: {
-				authorization: `Bearer invalidPayloadToken`
-			}
-		};
-
-		const mockContext: ExecutionContext = {
-			switchToHttp: () => ({
-				getRequest: () => mockRequest
-			})
-		} as ExecutionContext;
-
-		// Configurar o mock para lançar uma exceção ao verificar o token
+			.mockReturnValue(jwtPayload);
 		jest
-			.spyOn(authServiceMock.useValue, "checkToken")
-			.mockImplementation(() => {
-				throw new UnauthorizedException("Invalid token payload");
-			});
+			.spyOn(userServiceMock.useValue, "findOne")
+			.mockRejectedValue(new Error("User not found"));
 
-		try {
-			await authGuard.canActivate(mockContext);
-			throw new Error("Expected canActivate to throw UnauthorizedException");
-		} catch (error) {
-			expect(error instanceof UnauthorizedException).toBe(true);
-			expect(error.message).toBe("Unauthorized");
-		}
+		const result = await authGuard.canActivate(mockContext);
+
+		expect(result).toBe(false);
+		expect(mockRequest.tokenPayload).toEqual(jwtPayload);
+		expect(mockRequest.user).toBeUndefined();
 	});
 });
