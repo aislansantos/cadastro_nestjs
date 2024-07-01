@@ -40,7 +40,10 @@ import { UsersModule } from "./users/users.module";
 			database: process.env.DB_DATABASE,
 			entities: [UserEntity],
 			synchronize:
-				process.env.ENV === "development" || process.env.ENV === "test"
+				process.env.ENV === "development" || process.env.ENV === "test",
+			charset: "utf8mb4_unicode_ci", // Ajuste a codificação de acordo com o seu banco de dados
+			retryAttempts: 10, // Número de tentativas de reconexão
+			retryDelay: 1000 // Delay entre as tentativas de reconexão (em milissegundos)
 		}),
 		MailerModule.forRoot({
 			transport: {

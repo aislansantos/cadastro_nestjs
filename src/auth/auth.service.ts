@@ -50,23 +50,24 @@ export class AuthService {
 				issuer: this.issuer,
 				audience: this.audience
 			});
-
 			return data;
 		} catch (e) {
-			throw new BadRequestException(e);
+			throw new BadRequestException("Token inválido");
 		}
 	}
 
 	public async login(email: string, password: string) {
-		const user = await this.usersRepository.findOneBy({ email });
+		const user = await this.usersRepository.findOne({ where: { email } });
+
 		if (!user) {
-			throw new UnauthorizedException("Email e/ou senha incorretos");
+			throw new UnauthorizedException("E-mail e/ou senha incorretos");
 		}
 
 		const passwordCompare = await bcrypt.compare(password, user.password);
 		if (!passwordCompare) {
-			throw new UnauthorizedException("Email e/ou senha incorretos");
+			throw new UnauthorizedException("E-mail e/ou senha incorretos");
 		}
+
 		return this.createToken(user);
 	}
 
@@ -105,15 +106,11 @@ export class AuthService {
 
 	// TODO: implementar o reset de senha
 	public async reset(password: string, token: string) {
-		// TODO: Validar o token
 		try {
-			const data = this.jwtService.verify(token, {
-				issuer: "forget",
-				audience: "users"
-			});
+			const data = this.compareAssignaturesToken(token);
 
-			if (isNaN(Number(data.id))) {
-				throw new BadRequestException("Token inválido");
+			if (!data || isNaN(Number(data.id))) {
+				throw new UnauthorizedException("Token inválido");
 			}
 
 			password = await bcrypt.hash(password, await bcrypt.genSalt());
@@ -123,8 +120,12 @@ export class AuthService {
 			const user = await this.userService.findOne(Number(data.id));
 
 			return this.createToken(user);
-		} catch (e) {
-			throw new BadRequestException(e);
+		} catch (error) {
+			if (error instanceof UnauthorizedException) {
+				throw error;
+			} else {
+				throw new UnauthorizedException("Token inválido");
+			}
 		}
 	}
 
@@ -143,5 +144,14 @@ export class AuthService {
 		} catch (e) {
 			return false;
 		}
+	}
+
+	public compareAssignaturesToken(token: string) {
+		const data = this.jwtService.verify(token, {
+			issuer: "forget",
+			audience: "users"
+		});
+
+		return data;
 	}
 }
