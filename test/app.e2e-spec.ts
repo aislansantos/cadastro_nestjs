@@ -15,6 +15,11 @@ describe("AppController (e2e)", () => {
 		await app.init();
 	});
 
+	// Termina aplicação despois do teste executado.
+	afterAll(() => {
+		app.close();
+	});
+
 	it("/ (GET)", () => {
 		return request(app.getHttpServer())
 			.get("/")

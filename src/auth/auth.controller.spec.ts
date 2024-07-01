@@ -3,7 +3,7 @@ import { AuthGuard } from "../guards/auth/auth.guard";
 import { accessToken } from "../testing/access-token.mock";
 import { authForgetDto } from "../testing/auth-forget-dto.mock";
 import { authLoginDto } from "../testing/auth-login-dot.mock";
-import { authResgisterDto } from "../testing/auth-register-dot.mock";
+import { authRegisterDto } from "../testing/auth-register-dto.mock";
 import { authResetDto } from "../testing/auth-reset-dto.mock";
 import { authServiceMock } from "../testing/auth-service.mock";
 import { AuthGuardMock } from "../testing/guard-auth.mock";
@@ -37,7 +37,7 @@ describe("AuthController", () => {
 		});
 
 		it("register method", async () => {
-			const result = await authController.register(authResgisterDto);
+			const result = await authController.register(authRegisterDto);
 			expect(result.accessToken).toBe(accessToken);
 		});
 

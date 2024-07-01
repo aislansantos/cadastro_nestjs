@@ -20,6 +20,7 @@ import { UsersModule } from "./users/users.module";
 	imports: [
 		// Para enxergar o dados do .ENV
 		ConfigModule.forRoot({
+			// Configuração para envergar os dados de teste das variaveis de ambiente
 			envFilePath: process.env.ENV === "test" ? ".env.test" : ".env"
 		}),
 		// Ferramenta para precaver ataques, RateLimit
@@ -40,7 +41,10 @@ import { UsersModule } from "./users/users.module";
 			database: process.env.DB_DATABASE,
 			entities: [UserEntity],
 			synchronize:
-				process.env.ENV === "development" || process.env.ENV === "test"
+				process.env.ENV === "development" || process.env.ENV === "test",
+			charset: "utf8mb4_unicode_ci", // Ajuste a codificação de acordo com o seu banco de dados
+			retryAttempts: 10, // Número de tentativas de reconexão
+			retryDelay: 1000 // Delay entre as tentativas de reconexão (em milissegundos)
 		}),
 		MailerModule.forRoot({
 			transport: {
