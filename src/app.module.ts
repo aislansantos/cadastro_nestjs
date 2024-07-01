@@ -20,6 +20,7 @@ import { UsersModule } from "./users/users.module";
 	imports: [
 		// Para enxergar o dados do .ENV
 		ConfigModule.forRoot({
+			// Configuração para envergar os dados de teste das variaveis de ambiente
 			envFilePath: process.env.ENV === "test" ? ".env.test" : ".env"
 		}),
 		// Ferramenta para precaver ataques, RateLimit
