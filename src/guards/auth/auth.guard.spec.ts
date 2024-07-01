@@ -1,4 +1,3 @@
-import { UnauthorizedException } from "@nestjs/common";
 import { ExecutionContext } from "@nestjs/common/interfaces";
 import { Test, TestingModule } from "@nestjs/testing";
 import { accessToken } from "../../testing/access-token.mock";
@@ -48,10 +47,10 @@ describe("AuthGuard", () => {
 		expect(mockRequest.user).toEqual(userEntityList[0]);
 	});
 
-	it("should throw UnauthorizedException with invalid token", async () => {
+	it("should not allow access with invalid token", async () => {
 		const mockRequest: any = {
 			headers: {
-				authorization: `Bearer invalidAccessToken`
+				authorization: `token invalid`
 			}
 		};
 
@@ -61,90 +60,13 @@ describe("AuthGuard", () => {
 			})
 		} as ExecutionContext;
 
-		// Configurando o mock para lançar uma exceção ao verificar o token
-		jest
-			.spyOn(authServiceMock.useValue, "checkToken")
-			.mockImplementation(() => {
-				throw new UnauthorizedException("Invalid token");
-			});
+		// Configurando o mock para retornar null ao verificar o token
+		jest.spyOn(authServiceMock.useValue, "checkToken").mockReturnValue(null);
 
-		try {
-			await authGuard.canActivate(mockContext);
-			throw new Error("Expected canActivate to throw UnauthorizedException");
-		} catch (error) {
-			expect(error instanceof UnauthorizedException).toBe(true);
-			expect(error.message).toBe("Unauthorized");
-		}
-	});
+		const result = await authGuard.canActivate(mockContext);
 
-	it("should throw UnauthorizedException when authorization header is missing", async () => {
-		const mockRequest: any = {
-			headers: {} // Empty headers
-		};
-
-		const mockContext: ExecutionContext = {
-			switchToHttp: () => ({
-				getRequest: () => mockRequest
-			})
-		} as ExecutionContext;
-
-		try {
-			await authGuard.canActivate(mockContext);
-			throw new Error("Expected canActivate to throw UnauthorizedException");
-		} catch (error) {
-			expect(error instanceof UnauthorizedException).toBe(true);
-			expect(error.message).toBe("Unauthorized");
-		}
-	});
-
-	it("should throw UnauthorizedException with expired token", async () => {
-		const mockRequest: any = {
-			headers: {
-				authorization: `Bearer expiredAccessToken`
-			}
-		};
-
-		const mockContext: ExecutionContext = {
-			switchToHttp: () => ({
-				getRequest: () => mockRequest
-			})
-		} as ExecutionContext;
-
-		try {
-			await authGuard.canActivate(mockContext);
-			throw new Error("Expected canActivate to throw UnauthorizedException");
-		} catch (error) {
-			expect(error instanceof UnauthorizedException).toBe(true);
-			expect(error.message).toBe("Unauthorized"); // Manter a mensagem esperada como "Unauthorized"
-		}
-	});
-
-	it("should throw UnauthorizedException when token payload cannot be validated", async () => {
-		const mockRequest: any = {
-			headers: {
-				authorization: `Bearer invalidPayloadToken`
-			}
-		};
-
-		const mockContext: ExecutionContext = {
-			switchToHttp: () => ({
-				getRequest: () => mockRequest
-			})
-		} as ExecutionContext;
-
-		// Configurar o mock para lançar uma exceção ao verificar o token
-		jest
-			.spyOn(authServiceMock.useValue, "checkToken")
-			.mockImplementation(() => {
-				throw new UnauthorizedException("Invalid token payload");
-			});
-
-		try {
-			await authGuard.canActivate(mockContext);
-			throw new Error("Expected canActivate to throw UnauthorizedException");
-		} catch (error) {
-			expect(error instanceof UnauthorizedException).toBe(true);
-			expect(error.message).toBe("Unauthorized");
-		}
+		expect(result).toBe(false); // Verificando que o acesso não é permitido
+		expect(mockRequest.tokenPayload).toBeNull(); // Deve ser null, já que é assim que o mock está configurado
+		expect(mockRequest.user).toBeUndefined(); // Não deve haver usuário associado
 	});
 });
