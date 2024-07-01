@@ -35,10 +35,13 @@ describe("AuthGuard", () => {
 			})
 		} as ExecutionContext;
 
-		// Configurando o mock para retornar dados válidos ao verificar o token
+		// Mock para retornar dados válidos ao verificar o token
 		jest
 			.spyOn(authServiceMock.useValue, "checkToken")
 			.mockReturnValue(jwtPayload);
+		jest
+			.spyOn(userServiceMock.useValue, "findOne")
+			.mockResolvedValue(userEntityList[0]);
 
 		const result = await authGuard.canActivate(mockContext);
 
@@ -47,10 +50,10 @@ describe("AuthGuard", () => {
 		expect(mockRequest.user).toEqual(userEntityList[0]);
 	});
 
-	it("should not allow access with invalid token", async () => {
+	it("should handle errors thrown by userService", async () => {
 		const mockRequest: any = {
 			headers: {
-				authorization: `token invalid`
+				authorization: `Bearer ${accessToken}`
 			}
 		};
 
@@ -60,13 +63,17 @@ describe("AuthGuard", () => {
 			})
 		} as ExecutionContext;
 
-		// Configurando o mock para retornar null ao verificar o token
-		jest.spyOn(authServiceMock.useValue, "checkToken").mockReturnValue(null);
+		jest
+			.spyOn(authServiceMock.useValue, "checkToken")
+			.mockReturnValue(jwtPayload);
+		jest
+			.spyOn(userServiceMock.useValue, "findOne")
+			.mockRejectedValue(new Error("User not found"));
 
 		const result = await authGuard.canActivate(mockContext);
 
-		expect(result).toBe(false); // Verificando que o acesso não é permitido
-		expect(mockRequest.tokenPayload).toBeNull(); // Deve ser null, já que é assim que o mock está configurado
-		expect(mockRequest.user).toBeUndefined(); // Não deve haver usuário associado
+		expect(result).toBe(false);
+		expect(mockRequest.tokenPayload).toEqual(jwtPayload);
+		expect(mockRequest.user).toBeUndefined();
 	});
 });
