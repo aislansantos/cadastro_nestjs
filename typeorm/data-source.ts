@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
 
 dotenv.config({
+	// configuração do arquivo para enxergar os dados de teste quando for fazer os teste.
 	path: process.env.ENV === "test" ? ".env.test" : ".env"
 });
 
